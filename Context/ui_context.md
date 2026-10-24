@@ -503,3 +503,36 @@ Use Anime.js extensively and consistently for supported web-based components, bu
 The final result must be visually polished, accessible, responsive, performant, and reliable for real construction-site work.
 
 Design quality is mandatory. Functional reliability is non-negotiable.
+
+------------------------------------------------------------------
+16. IMPLEMENTATION STATUS (SV-001)
+------------------------------------------------------------------
+
+No user interface exists yet. This document therefore describes the required design
+system, not delivered screens. The following status table must be maintained so the
+design specification is never mistaken for implemented UI.
+
+| Area | Status | Notes |
+|---|---|---|
+| Design tokens (colour, spacing, type) | NOT IMPLEMENTED | Arrives with `:core:designsystem` in SV-002 |
+| SmartView Signature Dark | NOT IMPLEMENTED | Target default theme |
+| Professional Light | NOT IMPLEMENTED | |
+| Construction High Visibility | NOT IMPLEMENTED | |
+| Calm Blue | NOT IMPLEMENTED | |
+| System default following OS setting | NOT IMPLEMENTED | |
+| Reusable components (cards, chips, empty/error states) | NOT IMPLEMENTED | |
+| Anime.js web modules | NOT IMPLEMENTED | Remains restricted to web-based UI; no WebView is planned for native screens |
+| Reduced-motion support | NOT IMPLEMENTED | Requirement retained for SV-002 |
+| Accessibility (touch targets, scaling, contrast) | NOT IMPLEMENTED | Requirement retained for SV-002 |
+
+Decisions already binding on the future UI:
+
+1. The estimator screen must show provenance labels next to every figure, and must not
+   present derived litres as a measurement (see `Provenance` in `:core:model`).
+2. Premium states come from `EntitlementEvaluator` decisions; the UI renders
+   `Allowed` / `UpgradeRequired` / `VerificationRequired` / `ProjectLimitReached` and never
+   inspects plan names itself.
+3. Assumption text from `PaintEstimate.assumptions` must remain visible on the result
+   screen and in any exported quotation.
+4. Themes must be implemented as token sets so the estimator and project screens survive
+   a redesign unchanged.

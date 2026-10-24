@@ -556,4 +556,49 @@ Review all dependency licences before commercial release. Prepare appropriate co
 
 14. Immediate Execution Instruction
 
-Start by inspecting the existing Walnus SmartView Pro repository and 
+Start by inspecting the existing Walnus SmartView Pro repository and
+
+------------------------------------------------------------------
+15. IMPLEMENTATION STATUS (SV-001)
+------------------------------------------------------------------
+
+This is a factual snapshot, not a plan.
+
+Completed and verified
+
+- Modular Gradle foundation with five Android-free core modules.
+- Provenance-preserving domain model (projects, surveys, surfaces, measurements).
+- Deterministic paint estimation: deductions, coats, wastage, pack rounding, primer,
+  assumptions, trust capping.
+- Quotation arithmetic in integer minor units with discount allocation and basis-point
+  tax.
+- Entitlement evaluation with free-tier offline operation, device-forgery resistance,
+  clock-skew rejection and bounded offline grace.
+- Trade capability contract with painting as its first implementation.
+- Verification tooling and evidence logs (`tools/verify-core.sh`,
+  `docs/build-evidence/`).
+
+Not started
+
+- Android application module, navigation, screens, themes and components.
+- Local persistence, migrations and offline queue.
+- Camera capture, measurement entry and surface selection.
+- Reports, exports and sharing.
+- AI assistance, supplier discovery and colour visualisation.
+- Any billing provider, backend entitlement service or synchronisation.
+- Any APK. The APK build is blocked in the authoring environment and is reported as
+  blocked, not as passing.
+
+Priority mapping for Section 11
+
+- Priority 1 (stabilise the existing application) is re-scoped: there was no application
+  to stabilise, only documentation. The equivalent action was to establish a verified
+  foundation, which SV-001 did.
+- Priority 2 (modular foundation) is complete for the domain layer and continues in
+  SV-002 with the app shell and design system.
+- Priorities 3-5 remain open, with Priority 3 (commercial definitions) still awaiting
+  business decisions rather than code.
+
+Definition of Done consequence: SV-001 is PARTIAL, because the "APK builds successfully"
+criterion is unmet. Any completed SV must satisfy that criterion or record a documented
+blocker, as this one does.

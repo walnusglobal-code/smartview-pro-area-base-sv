@@ -609,3 +609,103 @@ A module or architectural change is accepted only when:
 - Relevant tests pass.
 - The APK builds successfully.
 - Migrations and securi
+
+------------------------------------------------------------------
+20. IMPLEMENTED ARCHITECTURE — SV-001 (VERIFIED)
+------------------------------------------------------------------
+
+Section 3 describes the target architecture. This section records what actually exists
+after SV-001, so the document cannot be mistaken for a description of deployed code.
+
+20.1 Modules that exist
+
+:core:model          Domain types: ids, provenance, lengths, measurements, surfaces,
+                     projects, surveys. No dependencies.
+:core:entitlements   Feature keys, plan definitions, subscription state, offline policy,
+                     access decisions. No dependencies; injectable clock.
+:core:trade          TradeCapability contract and trade ids. Depends on :core:entitlements.
+:core:estimation     Painting area and quantity calculation, PaintingTrade.
+                     Depends on :core:model and :core:trade.
+:core:quotation      Money, quote lines, quotation arithmetic. No dependencies.
+
+Modules NOT yet created: `:app`, `:core:database`, `:core:designsystem`,
+`:core:navigation`, `:core:network`, `:feature:projects`, `:feature:survey`,
+`:feature:reports`, `:feature:account`. They are not declared in settings.gradle.kts, so
+the build never references a module that does not exist.
+
+20.2 Enforced dependency rules
+
+- Every core module is a plain Kotlin/JVM library: no Android, Compose, Room or billing
+  SDK types appear in them.
+- `:core:quotation` deliberately does not depend on `:core:model`, so quotation maths can
+  be reused by any trade.
+- Trade modules depend on the trade contract, never on each other.
+- `tools/verify-core.sh` compiles each module in isolation with only its declared
+  dependencies, so an accidental cross-module import fails verification.
+
+20.3 Decisions recorded
+
+ADR-001  Domain first, UI second.
+         Calculation and entitlement logic is Android-free so it can be tested without a
+         device, and so a future visual redesign cannot break it.
+
+ADR-002  Provenance is a type, not a convention.
+         `Provenance` travels with values; `weakestOf` combines trust. Derived quantities
+         are capped at ESTIMATED and inherit weaker inputs, so paint litres can never be
+         reported as a measured physical value.
+
+ADR-003  Money in integer minor units.
+         Floating-point money is prohibited in the domain; rounding is explicit and
+         half-up.
+
+ADR-004  Entitlements decide, they do not fetch.
+         `EntitlementEvaluator` is pure and takes a snapshot plus a clock. I/O, caching
+         and backend refresh belong to a future repository layer. Device-only snapshots
+         can never unlock paid capability.
+
+ADR-005  Trade contract is minimal.
+         `TradeCapability` carries identity, gating key and a summary only. The painting
+         engine is not hidden behind a generic "estimate" interface that plastering and
+         screeding might not share.
+
+ADR-006  Verification is a script, not an assumption.
+         `tools/verify-core.sh` produces a log for every run. A milestone without a log
+         entry is not verified.
+
+ADR-007  No `:app` module before its build can be verified.
+         Declaring an Android module that has never been compiled would place an
+         unverified artifact at the root of the project. It arrives in SV-002 together
+         with a real APK build.
+
+20.4 Data flow of an estimate (implemented path)
+
+Surface(s) with Provenance
+    -> SurfaceAreaCalculator.paintableArea()      gross, deductions, net, provenance
+    -> PaintCalculator.estimate(specification)    litres, coats, wastage, packs
+    -> PaintEstimate                              numbers + assumptions + provenance
+    -> (future) Quotation lines using Money       user-supplied prices only
+
+20.5 Entitlement decision matrix (implemented)
+
+Snapshot state                          Effective plan   Trust             Paid feature
+No snapshot                             FREE             FREE_TIER         UpgradeRequired
+DEVICE_ONLY (any plan)                  FREE             DEVICE_ONLY       VerificationRequired
+Timestamped beyond skew tolerance       FREE             STALE             VerificationRequired
+Server VERIFIED, ACTIVE, in date        as recorded      SERVER_VERIFIED   Allowed
+Server VERIFIED, expired <= policy grace as recorded     SERVER_GRACE      Allowed
+Server VERIFIED, expired > grace        FREE             STALE             VerificationRequired
+TRIALING with no expiry                 FREE             STALE             VerificationRequired
+EXPIRED / REVOKED / NONE                FREE             SERVER_VERIFIED   UpgradeRequired
+
+20.6 Not implemented, not claimed
+
+Persistence, migration, sync, camera capture, reporting/export, AI services, supplier
+discovery, billing adapters, backend verification, and every screen in Section 4.
+
+20.7 Verification
+
+    KOTLIN_HOME=<kotlin-distribution> ./tools/verify-core.sh
+
+Evidence: `docs/build-evidence/sv-001-core-verification.log` (78/78 tests passing).
+APK build remains blocked in the authoring environment; see
+`docs/build-evidence/sv-001-apk-build-attempt.log`.

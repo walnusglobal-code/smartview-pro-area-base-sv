@@ -31,20 +31,53 @@ The product vision combines camera-based site capture, project and survey manage
 
 > **Development rule:** This README is a living project document. Every AI agent and developer must update it as features and modules are implemented, tested, and verified. Never describe a planned feature as completed without evidence.
 
+## 📊 Implementation Status (last updated: SV-001)
+
+This section is factual and kept in step with `Context/progress_tracker.md`. If a
+capability is not listed as verified here, treat it as not implemented.
+
+| Area | Status | Evidence |
+|---|---|---|
+| Project/domain foundation (projects, surveys, surfaces, measurements) | ✅ **Verified** | 26 unit tests, `:core:model` |
+| Measurement provenance (measured / inferred / estimated / user-confirmed / AI-suggested) | ✅ **Verified** | Provenance rules enforced and tested |
+| Paint estimation (areas, openings, coats, wastage, pack rounding, primer, assumptions) | ✅ **Verified** | 21 unit tests, `:core:estimation` |
+| Quotation arithmetic (minor units, discount allocation, basis-point tax) | ✅ **Verified** | 12 unit tests, `:core:quotation` |
+| Entitlement gating (free/trial/premium/business, offline grace, forgery resistance) | ✅ **Verified** | 19 unit tests, `:core:entitlements` |
+| Trade contract + painting trade registration | ✅ **Verified** | `:core:trade`, `PaintingTrade` |
+| Gradle project skeleton, version catalogue, wrapper | ⚠️ **Not executed** | Committed; Gradle could not run in the authoring environment |
+| Android app module, screens, themes, navigation | ⛔ **Not started** | Planned for SV-002 |
+| Persistence (Room or equivalent), camera, reports/export | ⛔ **Not started** | SV-003+ |
+| AI services, supplier discovery, colour visualisation | ⛔ **Not started** | Requires approved provider decisions |
+| Billing / subscriptions / backend verification | ⛔ **Not started** | Provider and pricing undecided |
+| APK | ⛔ **Blocked** | See note below |
+
+**Verification evidence**
+
+- `docs/build-evidence/sv-001-core-verification.log` — every core module compiled
+  independently and **78 / 78 unit tests passed** (`tools/verify-core.sh`).
+- `docs/build-evidence/sv-001-apk-build-attempt.log` — the result of the mandatory APK
+  build attempt: **BLOCKED**, because the authoring environment has no Android SDK, no
+  Gradle distribution and cannot reach Google Maven or Maven Central. No APK exists and
+  none is claimed.
+- Milestone report: [`docs/reports/SV-001-completion-report.md`](docs/reports/SV-001-completion-report.md).
+
+> Status vocabulary: ✅ Verified (built and tested) · ⚠️ Written but unverified ·
+> ⛔ Not started or blocked. A file existing is **not** evidence of a working feature.
+
 ## 🎯 Core Product Modules
 
-| Module | Purpose | Status |
-|---|---|---|
-| Project Management | Organise projects, surveys, and site records | Verify against codebase |
-| Camera & Site Capture | Capture site images and associate them with surveys | Verify against codebase |
-| Smart Survey | Support surface identification and measurement workflows | Planned / verify |
-| Painting Intelligence | Estimate paint quantities and materials | Planned / verify |
-| Colour Visualisation | Preview proposed building finishes | Planned / verify |
-| AI Intelligence | Support research, estimates, and supplier discovery | Planned / verify |
-| Quotations & Reports | Produce structured project outputs | Planned / verify |
-| Offline Data | Preserve supported workflows without connectivity | Verify against codebase |
-| Mix Master | Support paint formulation and material knowledge | Planned / verify |
-| Subscription System | Separate free and premium application capabilities | Planned / verify |
+| Module | Purpose | Status | Evidence |
+|---|---|---|---|
+| Project Management | Organise projects, surveys, and site records | ✅ Domain model verified · UI not started | `:core:model` tests |
+| Camera & Site Capture | Capture site images and associate them with surveys | ⛔ Not started | — |
+| Smart Survey | Surface identification and measurement workflow | ✅ Surface/area model verified · UI not started | `:core:model`, `SurfaceAreaCalculator` |
+| Painting Intelligence | Estimate paint quantities and materials | ✅ Verified engine · UI not started | `:core:estimation` tests |
+| Colour Visualisation | Preview proposed building finishes | ⛔ Not started | — |
+| AI Intelligence | Research, estimates, and supplier discovery | ⛔ Not started | Feature keys reserved only |
+| Quotations & Reports | Produce structured project outputs | ⚠️ Quotation arithmetic verified · documents/export not built | `:core:quotation` tests |
+| Offline Data | Preserve supported workflows without connectivity | ⚠️ Design only (pure domain, no storage yet) | `:core:entitlements` offline policy |
+| Mix Master | Paint formulation and material knowledge | ⛔ Not started | — |
+| Subscription System | Separate free and premium capabilities | ⚠️ Gating logic verified · no billing | `:core:entitlements` tests |
 
 **Agent instruction:** Update each status only after reviewing the implementation and performing the relevant tests.
 
@@ -173,14 +206,15 @@ Keep the following documents aligned with the codebase. Use the filenames alread
 
 | Document | Responsibility |
 |---|---|
-| `README.md` | Project overview, verified features, setup, module register, and lifecycle |
-| `PROJECT_OVERVIEW.md` | Product goals, scope, priorities, and acceptance criteria |
-| `AI_WORKFLOW.md` | Mandatory agent workflow and verification rules |
-| `ARCHITECTURE.md` | Application layers, interfaces, and technical decisions |
-| `CODING_STANDARDS.md` | Coding conventions, security, and quality requirements |
-| `UI_CONTEXT.md` | Design system, themes, typography, icons, and animation |
-| `PROGRESS_TRACKER.md` | SV stage status, blockers, builds, and tests |
-| SV completion reports | Detailed results for each development stage |
+| [`README.md`](README.md) | Project overview, verified features, setup, module register, lifecycle |
+| [`Context/project_overview.md`](Context/project_overview.md) | Product goals, scope, priorities, acceptance criteria, implementation status |
+| [`Context/ai_workflow.md`](Context/ai_workflow.md) | Mandatory agent workflow, verification gates, evidence rules |
+| [`Context/architecture.md`](Context/architecture.md) | Layers, interfaces, ADRs, implemented-vs-target architecture |
+| [`Context/Coding_standards.md`](Context/Coding_standards.md) | Conventions, security, testing, modularity, Git practice |
+| [`Context/ui_context.md`](Context/ui_context.md) | Design system, themes, typography, icons, animation, UI status |
+| [`Context/progress_tracker.md`](Context/progress_tracker.md) | SV status, test and build evidence, blockers, next actions |
+| [`docs/reports/`](docs/reports) | One SV completion report per milestone |
+| [`docs/build-evidence/`](docs/build-evidence) | Raw logs from verification and build attempts |
 
 ### Module Register
 
@@ -188,13 +222,18 @@ Add a new row whenever a meaningful module or feature is introduced. Keep the hi
 
 | ID | Module | Stage | Status | Evidence |
 |---|---|---|---|---|
-| MOD-001 | Project and Survey Foundation | Verify | Verify | Add test/build evidence |
-| MOD-002 | Camera and Capture | Verify | Verify | Add test/build evidence |
-| MOD-003 | UI Theme System | Pending verification | Planned | Add test/build evidence |
-| MOD-004 | Animation System | Pending verification | Planned | Add test/build evidence |
-| MOD-005 | Painting Estimates | Pending verification | Planned | Add test/build evidence |
-| MOD-006 | Quotations and Reports | Pending verification | Planned | Add test/build evidence |
-| MOD-007 | Subscription and Premium | Pending verification | Planned | Add test/build evidence |
+| MOD-001 | Domain model (projects, surveys, surfaces, measurements, provenance) | SV-001 | VERIFIED | `:core:model`, 26 tests in `docs/build-evidence/sv-001-core-verification.log` |
+| MOD-002 | Painting estimation engine | SV-001 | VERIFIED | `:core:estimation`, 21 tests |
+| MOD-003 | Quotation arithmetic | SV-001 | VERIFIED | `:core:quotation`, 12 tests |
+| MOD-004 | Entitlements and feature gating | SV-001 | VERIFIED (logic only) | `:core:entitlements`, 19 tests |
+| MOD-005 | Trade capability contract | SV-001 | VERIFIED | `:core:trade` |
+| MOD-006 | Android app shell and navigation | SV-002 | PLANNED | — |
+| MOD-007 | Design system and themes | SV-002 | PLANNED | — |
+| MOD-008 | Local persistence and migrations | SV-003 | PLANNED | — |
+| MOD-009 | Camera capture and measurement entry | SV-004 | PLANNED | — |
+| MOD-010 | Reports and export | SV-005 | PLANNED | — |
+| MOD-011 | Plastering and screeding | SV-006 | PLANNED | — |
+| MOD-012 | Billing and backend entitlements | SV-007 | DEFERRED (commercial decisions pending) | — |
 
 **Status vocabulary:** `PLANNED`, `IN PROGRESS`, `BLOCKED`, `IMPLEMENTED`, `TESTED`, `VERIFIED`, `DEFERRED`.
 
@@ -217,18 +256,63 @@ Before marking an SV stage complete:
 
 ## 🚀 Getting Started
 
-Clone the repository:
+### Requirements
+
+| Tool | Version | Needed for |
+|---|---|---|
+| JDK | 17+ | everything |
+| Kotlin compiler | 2.0+ (`KOTLIN_HOME`) | core verification without Gradle |
+| Android Studio / Android SDK | API 35 platform + build-tools | the Android app (SV-002 onwards) |
+| Gradle | via the committed wrapper (8.9) | Gradle builds |
+
+### Clone
 
 ```bash
-git clone https://github.com/shawnthedon/Walnus-SmartView-Pro.git
-cd Walnus-SmartView-Pro
+git clone https://github.com/walnusglobal-code/smartview-pro-area-base-sv.git
+cd smartview-pro-area-base-sv
 ```
 
-Open the project in a compatible Android development environment or configured cloud workspace.
+### 1. Verify the calculation core (fast, no Android tooling)
 
-Before building, verify the project's Gradle wrapper, JDK version, Android SDK requirements, and available build tasks.
+```bash
+KOTLIN_HOME=/path/to/kotlinc ./tools/verify-core.sh
+```
 
-Use the repository's configured build process. Record the actual build command and result rather than assuming a task name or claiming an unverified build succeeded.
+This compiles each `:core` module in isolation (so illegal cross-module dependencies
+fail), runs all unit tests and writes `build/verify/verify-core.log`. Current result:
+**78/78 tests passing**.
+
+### 2. Build and test with Gradle
+
+```bash
+./gradlew :core:model:test :core:entitlements:test :core:trade:test \
+          :core:estimation:test :core:quotation:test
+```
+
+### 3. Build the Android app (from SV-002)
+
+```bash
+./gradlew :app:assembleDebug
+# artefact: app/build/outputs/apk/debug/app-debug.apk
+```
+
+The `:app` module does not exist yet; `settings.gradle.kts` deliberately does not declare
+it, so the project configures cleanly today. The Android build, Gradle wrapper download
+and Google Maven access could not be exercised in the authoring environment — do not
+treat build files as verified until you have run them.
+
+### Repository layout
+
+```
+core/model         Domain types and provenance rules       (no dependencies)
+core/entitlements  Plans, snapshots, access decisions      (no dependencies)
+core/trade         TradeCapability contract                -> entitlements
+core/estimation    Painting area/quantity engine           -> model, trade
+core/quotation     Money and quotation arithmetic          (no dependencies)
+tools/             Verification scripts and local test runner
+docs/              SV reports and build evidence
+Context/           The six canonical project documents
+```
 
 ## 🔐 Security and Data Integrity
 
@@ -243,18 +327,27 @@ Use the repository's configured build process. Record the actual build command a
 
 ## 🗺️ Roadmap
 
-This roadmap describes intended direction. The development agent must reconcile it with the approved project overview and current progress tracker.
+Completed:
 
-- [ ] Verify and document the current project baseline.
-- [ ] Stabilise project, survey, and camera workflows.
-- [ ] Establish reusable themes and UI components.
-- [ ] Verify performance on low- and high-spec devices.
-- [ ] Implement and verify painting quantity estimation.
-- [ ] Develop quotation and reporting workflows.
-- [ ] Integrate AI-assisted features with clear provenance.
-- [ ] Extend approved colour visualisation and finishing workflows.
-- [ ] Implement subscription and premium entitlements.
-- [ ] Establish reliable automated builds and release artifacts.
+- [x] Establish a documented project baseline.
+- [x] Create a modular Gradle foundation with Android-free core modules.
+- [x] Implement and verify measurement provenance rules.
+- [x] Implement and verify paint quantity estimation (areas, deductions, packs, primer).
+- [x] Implement and verify quotation arithmetic.
+- [x] Implement and verify entitlement/feature gating with offline policy.
+- [x] Provide reproducible core verification with committed evidence logs.
+
+Next:
+
+- [ ] Clear the Android build blocker and run `./gradlew build` (G2/G3 gates).
+- [ ] SV-002: app shell, Compose design system with four themes, project list, estimator
+      screen wired to the core, first debug APK.
+- [ ] SV-003: offline persistence behind repository interfaces, with migration tests.
+- [ ] SV-004: camera capture and surface measurement entry.
+- [ ] SV-005: quotation/report export and sharing.
+- [ ] SV-006: plastering and screeding on the shared trade contract.
+- [ ] Verify performance on low- and high-spec devices once an APK exists.
+- [ ] Commercial definitions (plans, prices, billing provider) once approved.
 
 ## 🤝 Contribution Rules
 

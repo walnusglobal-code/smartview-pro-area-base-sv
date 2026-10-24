@@ -1,0 +1,99 @@
+SmartView Pro — core verification
+Date: 2026-10-24T10:54:11Z
+Kotlin home: /tmp/kcx/package
+Java: openjdk version "25.0.2" 2026-01-20 LTS
+
+=== Compiling modules ===
+--- core:model
+--- core:entitlements
+--- core:trade
+--- core:estimation
+--- core:quotation
+
+=== Compiling test sources and runner ===
+--- core:model tests
+--- core:entitlements tests
+--- core:estimation tests
+--- core:quotation tests
+
+=== Running 13 test classes ===
+PASS  LengthTest.convertsBetweenUnitsWithoutDrift
+PASS  LengthTest.convertsMetricAndImperialUnitsExactly
+PASS  LengthTest.formatsWholeNumbersWithoutDecimalTail
+PASS  LengthTest.rejectsInvalidLengths
+PASS  MeasurementTest.inferredValueMustReferenceItsSource
+PASS  MeasurementTest.measuredValueNeedsNoSource
+PASS  MeasurementTest.rejectsNegativeTimestamp
+PASS  ProjectAndSurveyTest.measurableSurfacesFilterIncompleteLines
+PASS  ProjectAndSurveyTest.projectDefaultsToDraftAndTargetMarketCurrency
+PASS  ProjectAndSurveyTest.projectRejectsBlankName
+PASS  ProjectAndSurveyTest.projectRejectsInvalidCurrencyAndTimeline
+PASS  ProjectAndSurveyTest.surveyRejectsDuplicateSurfaceIds
+PASS  ProjectAndSurveyTest.surveyRequiresStatusCompleteWhenCompletionTimeIsSet
+PASS  ProvenanceTest.inferredEstimatedAndAiAreNotPhysicallyVerified
+PASS  ProvenanceTest.measuredAndUserConfirmedArePhysicallyVerified
+PASS  ProvenanceTest.provenanceSurvivesValueMapping
+PASS  ProvenanceTest.strengthOrderingMatchesDeclarationOrder
+PASS  ProvenanceTest.weakestOfRejectsEmptyInput
+PASS  ProvenanceTest.weakestOfReturnsLeastTrustworthyValue
+PASS  SurfaceTest.directAreaRequiresNonNegativeValue
+PASS  SurfaceTest.doorIsAnOpeningAndNotCountedAsPaintableArea
+PASS  SurfaceTest.excludedSurfaceDoesNotCountTowardsArea
+PASS  SurfaceTest.mixedUnitsProduceCorrectArea
+PASS  SurfaceTest.rectangularSurfaceComputesAreaInSquareMetres
+PASS  SurfaceTest.rejectsBlankLabel
+PASS  SurfaceTest.unknownExtentIsNotMeasurable
+PASS  EntitlementEvaluatorTest.afterGraceWindowPaidCapabilityRequiresVerification
+PASS  EntitlementEvaluatorTest.businessPlanAllowsUnlimitedProjects
+PASS  EntitlementEvaluatorTest.cancelledSubscriptionKeepsAccessUntilItExpires
+PASS  EntitlementEvaluatorTest.deviceOnlySnapshotNeverGrantsPaidFeatures
+PASS  EntitlementEvaluatorTest.evaluationDoesNotDependOnWhenItIsCalledForTheSameClockTime
+PASS  EntitlementEvaluatorTest.expiredButInsideGraceStillAllowsPaidCapability
+PASS  EntitlementEvaluatorTest.graceWindowIsBoundedByPolicy
+PASS  EntitlementEvaluatorTest.projectCreationFollowsPlanLimits
+PASS  EntitlementEvaluatorTest.revokedAccessFallsBackToFree
+PASS  EntitlementEvaluatorTest.serverVerifiedPremiumGrantsItsFeatures
+PASS  EntitlementEvaluatorTest.snapshotFromTheFutureIsTreatedAsUntrusted
+PASS  EntitlementEvaluatorTest.trialWithoutExpiryIsNotTreatedAsUnlimitedAccess
+PASS  EntitlementEvaluatorTest.withoutSnapshotTheFreeTierAppliesAndSurveyingStillWorks
+PASS  FeatureKeyTest.acceptsLowerSnakeCaseKeys
+PASS  FeatureKeyTest.rejectsMalformedKeys
+PASS  PlanCatalogTest.businessTierIsUnlimitedAndIncludesEveryDeclaredFeature
+PASS  PlanCatalogTest.catalogExposesEveryTier
+PASS  PlanCatalogTest.freeTierIncludesCorePaintingEstimation
+PASS  PlanCatalogTest.planLimitsAreOrderedByTier
+PASS  PaintCalculatorTest.aiSuggestedInputWeakensTheResult
+PASS  PaintCalculatorTest.assumptionsExplainEveryEstimate
+PASS  PaintCalculatorTest.derivedQuantityIsNeverStrongerThanEstimated
+PASS  PaintCalculatorTest.estimatesLitresAndRetailPacksForASmallRoom
+PASS  PaintCalculatorTest.exactPackMultipleNeedsNoExtraPack
+PASS  PaintCalculatorTest.packsAlwaysRoundUp
+PASS  PaintCalculatorTest.primerIsIncludedOnlyWhenRequestedAndConfigured
+PASS  PaintCalculatorTest.quantityBelowSmallestPackBuysOnePack
+PASS  PaintCalculatorTest.rejectsNonPositiveLitres
+PASS  PaintCalculatorTest.rejectsSurveyWithoutMeasurableArea
+PASS  PaintCalculatorTest.sameInputsAlwaysProduceSameEstimate
+PASS  PaintCalculatorTest.singleCoatWithoutWastageIsExact
+PASS  PaintCalculatorTest.specificationValidatesItsAssumptions
+PASS  PaintingTradeTest.paintingAdvertisesACapabilityTheShellCanList
+PASS  PaintingTradeTest.paintingRequiresTheCoreEstimationFeature
+PASS  SurfaceAreaCalculatorTest.emptySurveyHasNoProvenanceAndNoArea
+PASS  SurfaceAreaCalculatorTest.oversizedDeductionIsCappedAndFlagged
+PASS  SurfaceAreaCalculatorTest.provenanceIsWeakestOfContributors
+PASS  SurfaceAreaCalculatorTest.subtractsDoorsAndWindowsFromWalls
+PASS  SurfaceAreaCalculatorTest.trimCountsTowardsPaintableArea
+PASS  SurfaceAreaCalculatorTest.unmeasuredAndExcludedSurfacesAreReportedAsIgnored
+PASS  MoneyTest.additionAndSubtractionAreExactInMinorUnits
+PASS  MoneyTest.currencyCodeIsValidated
+PASS  MoneyTest.multiplicationRoundsLineValues
+PASS  MoneyTest.roundsHalfUpToWholeMinorUnits
+PASS  QuotationTest.discountCannotExceedSubtotal
+PASS  QuotationTest.discountIsSharedAcrossTaxableAndNonTaxableLines
+PASS  QuotationTest.discountReducesTheTaxableBase
+PASS  QuotationTest.emptyQuotationIsZeroRatherThanFailing
+PASS  QuotationTest.invalidLineInputsAreRejected
+PASS  QuotationTest.invalidQuotationInputsAreRejected
+PASS  QuotationTest.subtotalAddsLineTotals
+PASS  QuotationTest.taxIsAppliedAtTheConfiguredRate
+
+Tests run: 78, passed: 78, failed: 0
