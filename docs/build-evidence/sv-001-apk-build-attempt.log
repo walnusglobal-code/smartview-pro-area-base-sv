@@ -1,0 +1,42 @@
+===================================================================
+SmartView Pro — APK build attempt (SV-001)
+Date (UTC): 2026-10-24T10:56:55Z
+Branch: arena/1453e021-smartview-pro-area-base-sv
+Base commit: 417dbb6
+===================================================================
+
+$ uname -srm
+Linux 6.1.158+ x86_64
+
+$ command -v java javac gradle sdkmanager adb
+java         -> not found
+javac        -> not found
+gradle       -> not found
+sdkmanager   -> not found
+adb          -> not found
+
+$ echo $ANDROID_HOME $ANDROID_SDK_ROOT
+ANDROID_HOME='' ANDROID_SDK_ROOT=''
+
+$ ./gradlew --version   (wrapper jar present: yes)
+
+ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.
+
+
+--- Hosts required by the Android build ---
+https://dl.google.com/dl/android/maven2/ -> HTTP 000
+https://repo.maven.apache.org/maven2/ -> HTTP 000
+https://services.gradle.org/distributions/ -> HTTP 000
+
+--- Dexer (d8 / R8) availability ---
+Android build-tools d8: absent (no Android SDK installed).
+Probed alternatives:
+  * npm 'd8-termux' ships a Dalvik-format d8.jar (classes.dex inside a jar) — unusable on a desktop JVM.
+  * R8/d8 binaries found in public GitHub repos resolve to Git-LFS pointers served from a blocked host.
+
+--- Conclusion ---
+APK BUILD BLOCKED: no Android SDK, no Gradle distribution, no Google Maven / Maven Central
+reachability and no accessible dexer. No APK was produced; no build success is claimed.

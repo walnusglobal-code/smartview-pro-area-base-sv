@@ -314,3 +314,58 @@ A change is complete only when:
 - The commit and stage report provide traceable evidence.
 
 Final rule: Preserve working functionality, implement only what the current stage requires, verify the result, document the evidence, and report the truth.
+
+------------------------------------------------------------------
+19. ESTABLISHED CONVENTIONS (SV-001)
+------------------------------------------------------------------
+
+These conventions are now in force because code exists that follows them. New code must
+match them, and deviations must be documented as an ADR in `ARCHITECTURE.md`.
+
+19.1 Layout
+
+- Package root: `com.walnus.smartview`.
+- Module layout: `core/<module>/src/main/kotlin/...` and `core/<module>/src/test/kotlin/...`.
+- Android-free modules are Kotlin/JVM libraries (`kotlin("jvm")`), so they run under unit
+  tests without a device.
+- Android modules (from SV-002) live under `app/` (and later `feature/*`, `core/database`
+  and so on) and may depend on core modules, never the reverse.
+
+19.2 Domain rules
+
+- Any value a surveyor relies on carries `Provenance`; combine trust with
+  `Provenance.weakestOf`, never with an ad-hoc comparison.
+- Derived quantities must be capped at `ESTIMATED`; they must never be labelled
+  `MEASURED`. If inputs include `AI_SUGGESTED`, that weakness propagates.
+- Constructors validate their arguments with `require(...)` and a message that tells the
+  caller what to fix. Domain objects are immutable `data class`es.
+- Money is `Money` (integer minor units) — never `Double`. Percentages that are really
+  rates are stored in basis points.
+- No prices, tax rates, coverage figures or plan limits may appear in UI or feature code;
+  they come from `PaintSpecification`, the user, or `PlanCatalog`.
+- Time is injected through `Clock` wherever expiry or ordering matters; `SystemClock` is
+  the production implementation, `ManualClock` is for tests and previews.
+
+19.3 Tests
+
+- Tests live beside the module they verify, in `src/test/kotlin`, and use `kotlin.test`
+  assertions with JUnit-compatible annotations.
+- Test names describe behaviour: `subtractsDoorsAndWindowsFromWalls`, not `testArea`.
+- Every validation rule and every branch of a calculation gets at least one test.
+- Deterministic results are asserted twice with the same input (see
+  `sameInputsAlwaysProduceSameEstimate`).
+- Tests must run without Android, network or clock access.
+
+19.4 Tooling
+
+- `tools/verify-core.sh` is the gate for core changes; run it before committing domain
+  work and attach the log to `docs/build-evidence/`.
+- `tools/jvmtest/` contains environment workarounds only. Never reference it from module
+  source sets, and never ship it.
+- Build evidence logs are text, small and committed. APKs are not committed.
+
+19.5 Commits
+
+Conventional commit prefixes used so far: `feat:`, `docs:`, `test:`, `build:`, `chore:`.
+A commit that changes domain behaviour must state which gate was run and whether it
+passed, or that it was blocked and why.

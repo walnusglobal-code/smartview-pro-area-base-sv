@@ -367,3 +367,53 @@ Do not optimise for the number of files changed, the speed of code generation, o
 Every agent must leave the repository in a state that the next agent can understand, verify, and continue without reconstructing undocumented decisions.
 
 The final objective is a production-oriented SmartView Pro application whose code, documentation, APK artifacts, and reported status agree with one another.
+
+------------------------------------------------------------------
+20. VERIFICATION GATES IN THIS REPOSITORY (SV-001)
+------------------------------------------------------------------
+
+20.1 Gate ladder
+
+Run the highest-numbered gate the environment supports, and report the highest gate
+reached — never a higher one.
+
+| Gate | Command | Requires |
+|---|---|---|
+| G1 Core compile + unit tests | `KOTLIN_HOME=<kotlin> ./tools/verify-core.sh` | JDK 17+ and a Kotlin compiler |
+| G2 Gradle unit tests | `./gradlew test` | Gradle distribution + Maven Central |
+| G3 Android build | `./gradlew :app:assembleDebug` | Android SDK + Google Maven (from SV-002) |
+| G4 Device verification | install the APK on a physical device | APK + device |
+
+20.2 Evidence rules
+
+- Every gate run must leave a log in `docs/build-evidence/` named `sv-<n>-<gate>.log`.
+- The completion report must state the highest gate reached and the exact failure of the
+  first gate that was not reached.
+- A blocked gate is reported as BLOCKED with the diagnostic output; it is never silently
+  skipped, and never described as passing.
+- Do not invent APK paths, hashes, device results or CI results.
+
+20.3 Environment constraint currently in force
+
+The SV-001 environment could reach only GitHub, the npm registry and PyPI. Google Maven,
+Maven Central, `services.gradle.org` and the Android SDK were unavailable, so G2-G4 could
+not run. G1 was executed fully: all five core modules compiled and 78 tests passed.
+
+If a future environment has broader access, run G2 and G3 immediately and record the
+results before starting new feature work — an unbuilt `:app` module must not accumulate
+scope on top of an unverified foundation.
+
+20.4 Test tooling note
+
+Tests are ordinary `kotlin.test`/JUnit tests under `src/test/kotlin`. In restricted
+environments `tools/jvmtest/TestRunner.kt` executes them reflectively and
+`tools/jvmtest/stubs/` supplies a compile-time `org.junit.Test` annotation. The stub is
+never shipped and must be deleted if the project ever drops JUnit 4 in favour of a
+framework whose annotation cannot be stubbed the same way (for example JUnit 5) —
+in that case the Gradle build is the only valid gate.
+
+20.5 Documentation obligations retained
+
+Section 5 and the completion-report template in `docs/reports/` remain mandatory. The
+first report, `docs/reports/SV-001-completion-report.md`, is written as the reference
+example: it records criteria, evidence, the blocked build, limitations and the next SV.
