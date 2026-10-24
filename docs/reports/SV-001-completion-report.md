@@ -194,8 +194,10 @@ size and SHA-256 in `Context/progress_tracker.md`.
 
 ## 7. Commit SHA
 
-Recorded in `Context/progress_tracker.md` after the SV-001 commit on branch
-`arena/1453e021-smartview-pro-area-base-sv`.
+**1cc81a4** — `1cc81a4040abdf0098afdf22c8dc810d272b7570`
+
+Committed on branch `arena/1453e021-smartview-pro-area-base-sv`
+("feat(core): add verified domain foundation (SV-001)").
 
 ---
 

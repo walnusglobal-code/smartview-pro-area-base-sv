@@ -3,7 +3,7 @@ PROGRESS_TRACKER.md — WALNUS SMARTVIEW PRO
 Project: Walnus SmartView Pro
 Repository: https://github.com/walnusglobal-code/smartview-pro-area-base-sv
 Document purpose: Track SV status, verified work, build evidence, blockers and next actions.
-Last updated: 24 October 2026 (SV-001)
+Last updated: 24 October 2026 (SV-001, commit 1cc81a4)
 
 ------------------------------------------------------------------
 1. CURRENT STATE AT A GLANCE
@@ -17,6 +17,7 @@ Last updated: 24 October 2026 (SV-001)
 | APK build | BLOCKED in the authoring environment — no Android SDK, no Gradle distribution, no Google Maven/Maven Central access |
 | APK artifact | None. No successful build is claimed anywhere in this repository. |
 | Working branch | arena/1453e021-smartview-pro-area-base-sv |
+| SV-001 commit | `1cc81a4040abdf0098afdf22c8dc810d272b7570` (`1cc81a4`) |
 
 Verified evidence (see `docs/build-evidence/`):
 
